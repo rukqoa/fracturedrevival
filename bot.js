@@ -44,13 +44,26 @@ function botSendMessage(players) {
         .setThumbnail('https://cdn.discordapp.com/app-icons/518348437125857280/a4871861053e2c667d93b9716227cf82.png?size=512')
         .setTimestamp()
 
-    client.channels.fetch('304056626963546112', { allowUnknownGuild: true })
+    const lowPopChannel = '884529284121755688'
+    const mediumPopChannel = '884530026102542427'
+    const highPopChannel = '304056626963546112'
+
+    let selectedChannel = ''
+    if (players <= 3) {
+        selectedChannel = lowPopChannel
+    } else if (players <= 6) {
+        selectedChannel = mediumPopChannel
+    } else {
+        selectedChannel = highPopChannel
+    }
+
+    client.channels.fetch(selectedChannel, { allowUnknownGuild: true })
         .then(channel => {
             let lastMessageId = channel.lastMessageId
 
             channel.messages.fetch(lastMessageId).then(message => {
                 if (message && message.author.id === '518348437125857280'
-                    && Math.max(message.createdTimestamp, message.editedTimestamp) > Date.now() - 20 * 60 * 1000) {
+                    && Math.max(message.createdTimestamp, message.editedTimestamp) > Date.now() - 30 * 60 * 1000) {
                     channel.messages.edit(message, { embeds: [messageEmbed] })
                 } else {
                     channel.send({ embeds: [messageEmbed] })
